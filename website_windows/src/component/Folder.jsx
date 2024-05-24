@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-export default function Folder({ name }) {
+export default function Folder({ name,onClick}) {
   return (
-    <FolderBox>
+    <FolderBox onClick={()=>onClick(name)}>
       <Folders></Folders>
       <Text>{name}</Text>
     </FolderBox>

@@ -1,19 +1,47 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { MdWindow } from "react-icons/md";
 import { GoFileDirectoryFill } from "react-icons/go";
 import { SiGooglechrome } from "react-icons/si";
 import { VscVscode } from "react-icons/vsc";
 import Folder from "../component/Folder";
+import FolderPortal from "../component/FolderPortal";
+import { AnimatePresence } from "framer-motion";
 
 export default function First() {
+  const [clickedFolder, setClickedFolder] = useState(null);
+
+  const handleFolderClick = (name) => {
+    setClickedFolder(name);
+  };
+
+  const handleClosePortal = () => {
+    setClickedFolder(null);
+  };
+
   return (
     <FirstPage>
       <FolderBox>
         {Array.from({ length: 5 }, (_, index) => (
-          <Folder key={index} name={`Name${index + 1}`} />
+          <Folder
+            key={index}
+            name={`Name${index + 1}`}
+            onClick={handleFolderClick}
+          />
         ))}
       </FolderBox>
+      <AnimatePresence>
+        {clickedFolder && (
+          <>
+            <Overlay /> 
+            <FolderPortal
+              key="folder-portal"
+              name={clickedFolder}
+              onClose={handleClosePortal}
+            />
+          </>
+        )}
+      </AnimatePresence>
       <Box>
         <IconBase>
           <WindowsIcon fontSize={"1.5rem"} />
@@ -37,9 +65,19 @@ const FirstPage = styled.main`
 const FolderBox = styled.div`
   display: grid;
   grid-template-rows: repeat(5, 5rem); /* 5 rows */
-  grid-template-columns: repeat(2, 5rem); /* 5 columns */
+  grid-template-columns: repeat(2, 5rem); /* 2 columns */
   gap: 20px; /* Gap between items */
-  padding:5px; /* Padding around the grid */
+  padding: 5px; /* Padding around the grid */
+  cursor: pointer; /* Ensure cursor is pointer */
+`;
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+  z-index: 999; /* Ensure overlay is above other content */
 `;
 
 const Box = styled.div`
